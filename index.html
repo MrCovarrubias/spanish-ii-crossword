@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spanish II · Unit 1B Interactive Crossword</title>
+<style>
+:root{font-family:system-ui,Arial,sans-serif;color:#17283c;background:#f5f7fb}
+*{box-sizing:border-box}body{margin:0}.shell{max-width:1180px;margin:auto;padding:24px}
+h1{margin:0 0 6px;font-size:1.65rem}.sub{color:#536477;margin:0 0 16px}
+.panel{background:white;border:1px solid #dce4ed;border-radius:14px;padding:18px;box-shadow:0 3px 14px #10263a0b}
+.layout{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(270px,.85fr);gap:18px}
+#grid{display:grid;gap:0;max-width:100%;width:max-content;border:2px solid #27384c;background:#27384c;touch-action:manipulation}
+.square{position:relative;width:clamp(20px,2.8vw,35px);height:clamp(20px,2.8vw,35px);border:1px solid #354354;background:white}
+.square.block{background:#27384c;border-color:#27384c}
+.square.active{background:#dbeafe}.square.current{background:#a9d3ff}
+.square.good{background:#d8f5e4}.square.bad{background:#ffe0df}
+.square input{width:100%;height:100%;border:0;background:transparent;text-align:center;font-weight:700;font-size:clamp(13px,1.6vw,20px);text-transform:uppercase;color:#17283c;outline:0;padding:7px 0 0}
+.square:focus-within{outline:2px solid #2463c4;z-index:2}
+.num{position:absolute;left:2px;top:0;font-size:9px;font-weight:700;pointer-events:none}
+.clues h2{font-size:1.05rem;margin:4px 0 8px}.clues button{display:block;width:100%;background:#fff;border:1px solid transparent;text-align:left;border-radius:7px;padding:8px;margin-bottom:3px;cursor:pointer;color:#17283c;line-height:1.35}
+.clues button:hover,.clues button.selected{background:#e9f2ff;border-color:#9fc1f2}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin:15px 0}
+button.action{border:0;border-radius:8px;background:#174ea6;color:#fff;font-weight:600;padding:11px 14px;cursor:pointer}
+button.secondary{background:#e9eef5;color:#18344e}button:focus-visible{outline:3px solid #f4a340}
+#status{font-weight:650;min-height:1.5em}#progress{color:#51667c;margin:6px 0 14px}
+small{color:#526579}.print{display:none}
+@media(max-width:820px){.layout{grid-template-columns:1fr}.shell{padding:12px}.square{width:clamp(18px,4.3vw,33px);height:clamp(18px,4.3vw,33px)}}
+@media print{.controls{display:none}.shell{padding:0}.panel{box-shadow:none}.layout{grid-template-columns:1fr 1fr}}
+</style></head><body><main class="shell">
+<h1>Spanish II · Unit 1B Crossword</h1>
+<p class="sub">Extracurricular activities · 12 vocabulary terms · Suggested time: 13 minutes</p>
+<div class="panel"><label>Student name: <input id="student" type="text" placeholder="Enter your name" style="padding:7px;border:1px solid #a9b9c9;border-radius:6px;max-width:260px"></label>
+<p><strong>Directions:</strong> Click a clue or square and type one letter per box. Use the arrow keys to move, Backspace to erase, and click a crossing square again to switch direction. Accents are optional for typing (NATACION is accepted for natación).</p>
+<div id="progress" aria-live="polite"></div>
+<div class="layout"><section><div id="grid" role="group" aria-label="Crossword puzzle grid"></div>
+<div class="controls"><button class="action" id="check">Check answers</button><button class="action secondary" id="clear">Clear puzzle</button><button class="action secondary" id="print">Print / Save PDF</button></div>
+<div id="status" aria-live="polite"></div>
+<p><small>Canvas assignment submission: When finished, select <strong>Print / Save PDF</strong> and submit the saved PDF (or a screenshot) to your Canvas assignment. Your teacher can review your completed grid and score.</small></p>
+</section><aside class="clues"><h2>Across</h2><div id="across"></div><h2>Down</h2><div id="down"></div></aside></div></div></main>
+<script>
+const puzzle={"board": [[null, null, null, null, null, null, "P", null, null, null, null, null, null, null, null, null], [null, null, null, null, null, "C", "A", "N", "T", "A", "N", "T", "E", null, null, null], [null, null, null, null, null, null, "R", null, null, null, null, null, null, null, null, null], [null, null, "O", "P", "O", "R", "T", "U", "N", "I", "D", "A", "D", null, null, null], [null, null, null, "A", null, null, "I", null, "A", null, null, null, null, null, null, "E"], [null, null, null, "S", null, null, "C", null, "T", null, null, null, "H", null, null, "N"], ["G", "A", "N", "A", "R", null, "I", null, "A", null, null, "B", "O", "L", "O", "S"], [null, null, null, "T", null, null, "P", null, "C", null, null, null, "C", null, null, "A"], [null, null, null, "I", null, null, "A", null, "I", null, "E", null, "K", null, null, "Y"], [null, null, null, "E", null, null, "R", null, "O", "R", "Q", "U", "E", "S", "T", "A"], [null, null, null, "M", null, null, null, null, "N", null, "U", null, "Y", null, null, "R"], [null, null, null, "P", null, null, null, null, null, null, "I", null, null, null, null, null], [null, null, null, "O", null, null, null, null, null, null, "P", null, null, null, null, null], [null, null, null, null, null, null, null, null, null, "V", "O", "L", "V", "E", "R", null]], "entries": [{"answer": "PARTICIPAR", "number": 1, "row": 0, "col": 6, "direction": "down", "clue": "Complete: Quiero ______ en el club atlético."}, {"answer": "CANTANTE", "number": 2, "row": 1, "col": 5, "direction": "across", "clue": "Persona que canta en una banda o un coro."}, {"answer": "OPORTUNIDAD", "number": 3, "row": 3, "col": 2, "direction": "across", "clue": "A chance to do or learn something new."}, {"answer": "PASATIEMPO", "number": 4, "row": 3, "col": 3, "direction": "down", "clue": "An activity you enjoy doing in your free time."}, {"answer": "NATACION", "number": 5, "row": 3, "col": 8, "direction": "down", "clue": "Deporte que se practica en una piscina."}, {"answer": "ENSAYAR", "number": 6, "row": 4, "col": 15, "direction": "down", "clue": "To rehearse before a performance."}, {"answer": "HOCKEY", "number": 7, "row": 5, "col": 12, "direction": "down", "clue": "Deporte que se juega con un palo y un disco."}, {"answer": "GANAR", "number": 8, "row": 6, "col": 0, "direction": "across", "clue": "To win a game or competition."}, {"answer": "BOLOS", "number": 9, "row": 6, "col": 11, "direction": "across", "clue": "Complete: Me gusta jugar a los ______ los sábados."}, {"answer": "EQUIPO", "number": 10, "row": 8, "col": 10, "direction": "down", "clue": "A group of players who compete together."}, {"answer": "ORQUESTA", "number": 11, "row": 9, "col": 8, "direction": "across", "clue": "Grupo de músicos que toca instrumentos musicales."}, {"answer": "VOLVER", "number": 12, "row": 13, "col": 9, "direction": "across", "clue": "To return or come back."}]};
+const {board,entries}=puzzle;const H=board.length,W=board[0].length;
+const grid=document.querySelector('#grid');grid.style.gridTemplateColumns=`repeat(${W},1fr)`;
+const cells=new Map(), inputValues={};let selected=null;
+const key=(r,c)=>`${r},${c}`;
+const words=entries.map((e,index)=>({...e,index,positions:Array.from({length:e.answer.length},(_,i)=>[e.row+(e.direction==='down'?i:0),e.col+(e.direction==='across'?i:0)])}));
+const starts={};words.forEach(w=>starts[key(w.row,w.col)]=w.number);
+for(let r=0;r<H;r++)for(let c=0;c<W;c++){
+ const square=document.createElement('div');square.className='square'+(board[r][c]===null?' block':'');
+ if(board[r][c]!==null){
+  if(starts[key(r,c)]){const n=document.createElement('span');n.className='num';n.textContent=starts[key(r,c)];square.appendChild(n)}
+  const inp=document.createElement('input');inp.maxLength=1;inp.autocomplete='off';inp.spellcheck=false;inp.setAttribute('aria-label',`Row ${r+1} column ${c+1}`);
+  inp.addEventListener('focus',()=>selectAt(r,c));
+  inp.addEventListener('click',()=>{const matches=words.filter(w=>w.positions.some(p=>p[0]===r&&p[1]===c));if(matches.length>1&&selected!==null){const other=matches.find(w=>w.index!==selected);if(other)selectWord(other.index)}});
+  inp.addEventListener('input',()=>{inp.value=inp.value.toUpperCase().replace(/[^A-ZÁÉÍÓÚÜÑ]/g,'').slice(-1);delete square.dataset.checked;clearMarks();if(inp.value)advance(r,c,1);updateProgress()});
+  inp.addEventListener('keydown',e=>{
+   if(e.key==='Backspace'&&!inp.value){e.preventDefault();advance(r,c,-1,true)}
+   if(e.key==='ArrowRight'||e.key==='ArrowLeft'||e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();move(r,c,e.key)}
+  });
+  square.appendChild(inp);cells.set(key(r,c),{square,inp});
+ }
+ grid.appendChild(square);
+}
+function selectWord(index,focus=false){selected=index;document.querySelectorAll('.square').forEach(x=>x.classList.remove('active','current'));document.querySelectorAll('.clues button').forEach(x=>x.classList.remove('selected'));
+ const w=words[index];w.positions.forEach(([r,c])=>cells.get(key(r,c)).square.classList.add('active'));
+ const b=document.querySelector(`[data-word="${index}"]`);if(b)b.classList.add('selected');
+ if(focus){const [r,c]=w.positions[0];cells.get(key(r,c)).inp.focus()}
+}
+function selectAt(r,c){const matches=words.filter(w=>w.positions.some(p=>p[0]===r&&p[1]===c));if(!matches.length)return;
+ const chosen=matches.find(w=>w.index===selected)||matches[0];selectWord(chosen.index);cells.get(key(r,c)).square.classList.add('current')}
+function advance(r,c,step,erase=false){const w=words[selected];if(!w)return;const i=w.positions.findIndex(p=>p[0]===r&&p[1]===c);if(i<0)return;
+ const next=w.positions[i+step];if(next){const target=cells.get(key(...next)).inp;target.focus();if(erase)target.value=''}}
+function move(r,c,arrow){const dr=arrow==='ArrowDown'?1:arrow==='ArrowUp'?-1:0,dc=arrow==='ArrowRight'?1:arrow==='ArrowLeft'?-1:0;const cell=cells.get(key(r+dr,c+dc));if(cell)cell.inp.focus()}
+for(const w of words){const b=document.createElement('button');b.type='button';b.dataset.word=w.index;b.innerHTML=`<strong>${w.number}.</strong> ${w.clue} <small>(${w.answer.length})</small>`;b.addEventListener('click',()=>selectWord(w.index,true));document.querySelector('#'+w.direction).appendChild(b)}
+function norm(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase()}
+function clearMarks(){document.querySelectorAll('.square').forEach(x=>x.classList.remove('good','bad'));document.querySelector('#status').textContent=''}
+function updateProgress(){const filled=[...cells.values()].filter(v=>v.inp.value).length;document.querySelector('#progress').textContent=`${filled} of ${cells.size} squares filled`}
+document.querySelector('#check').addEventListener('click',()=>{
+ clearMarks();let correct=0;
+ for(const w of words){const value=w.positions.map(([r,c])=>cells.get(key(r,c)).inp.value).join('');
+ if(norm(value)===norm(w.answer)){correct++;w.positions.forEach(([r,c])=>cells.get(key(r,c)).square.classList.add('good'))}}
+ const msg=`${correct} of ${words.length} words correct (${Math.round(correct/words.length*100)}%).`;
+ document.querySelector('#status').textContent=correct===words.length?`Excellent! ${msg} Save your work and submit it in Canvas.`:`${msg} Review the remaining words and try again.`;
+});
+document.querySelector('#clear').addEventListener('click',()=>{if(!confirm('Clear all your answers?'))return;cells.forEach(v=>v.inp.value='');clearMarks();updateProgress()});
+document.querySelector('#print').addEventListener('click',()=>window.print());
+updateProgress();
+</script></body></html>
